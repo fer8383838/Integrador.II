@@ -1,5 +1,5 @@
-package com.IntegradorII.GestionResiduos.controller;
 
+package com.IntegradorII.GestionResiduos.controller;
 
 import com.IntegradorII.GestionResiduos.entity.Usuario;
 import com.IntegradorII.GestionResiduos.repository.UsuarioRepository;
@@ -26,6 +26,9 @@ public class UsuarioController {
     public Usuario registrarUsuario(@RequestBody Usuario usuario) {
         System.out.println("Usuario recibido: " + usuario);
         Usuario usuarioGuardado = usuarioRepository.save(usuario);
+        entityManager.flush();
+
+        System.out.println("Usuario guardado: "+usuarioGuardado);
         return usuarioGuardado;
     }
 
