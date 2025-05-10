@@ -1,61 +1,22 @@
+package com.IntegradorII.GestionResiduos.dto;
 
+import com.IntegradorII.GestionResiduos.entity.Direccion;
+import java.util.List;
 
+public class UsuarioConDireccionesDTO {
 
-package com.IntegradorII.GestionResiduos.entity;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-
-@Entity
-@Table(name = "Usuarios")
-public class Usuario {
-
-    @JsonProperty("usuarioID")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UsuarioID")
     private Integer usuarioID;
-
-    @JsonProperty("nombre")
-    @Column(name = "Nombre")
     private String nombre;
-
-    @JsonProperty("apellido")
-    @Column(name = "Apellido")
     private String apellido;
-
-    @JsonProperty("dni")
-    @Column(name = "DNI")
     private String dni;
-
-    @JsonProperty("email")
-    @Column(name = "Email")
     private String email;
-
-    @JsonProperty("claveHash")
-    @Column(name = "ClaveHash")
     private String claveHash;
-
-    @JsonProperty("telefono")
-    @Column(name = "Telefono")
     private String telefono;
-
-    @JsonProperty("rol")
-    @Column(name = "Rol")
     private String rol;
-
-    @JsonProperty("activo")
-    @Column(name = "Activo")
     private Boolean activo;
-
-    @JsonProperty("fechaRegistro")
-    @Column(name = "FechaRegistro", insertable = false, updatable = false)
-    private LocalDateTime fechaRegistro;
+    private List<Direccion> direcciones;
 
     // Getters y Setters
-
     public Integer getUsuarioID() {
         return usuarioID;
     }
@@ -128,11 +89,11 @@ public class Usuario {
         this.activo = activo;
     }
 
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
+    public List<Direccion> getDirecciones() {
+        return direcciones;
     }
 
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
+    public void setDirecciones(List<Direccion> direcciones) {
+        this.direcciones = direcciones;
     }
 }

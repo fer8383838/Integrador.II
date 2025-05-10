@@ -1,63 +1,18 @@
-package com.IntegradorII.GestionResiduos.entity;
-
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+package com.IntegradorII.GestionResiduos.dto;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "Reportes")
-public class Reporte {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ReporteID")
-    @JsonProperty("reporteID")
-    private Integer reporteID;
-
-    @Column(name = "UsuarioID", nullable = false)
-    @JsonProperty("usuarioID")
+public class ReporteDTO {
     private Integer usuarioID;
-
-    @Column(name = "DireccionID", nullable = false)
-    @JsonProperty("direccionID")
     private Integer direccionID;
-
-    @Column(name = "TipoID", nullable = false)
-    @JsonProperty("tipoID")
     private Integer tipoID;
-
-    @Column(name = "ZonaID", nullable = false)
-    @JsonProperty("zonaID")
     private Integer zonaID;
-
-    @Column(name = "Descripcion", length = 500)
-    @JsonProperty("descripcion")
     private String descripcion;
-
-    @Column(name = "FotoURL", length = 255)
-    @JsonProperty("fotoURL")
     private String fotoURL;
-
-    @Column(name = "FechaReporte")
-    @JsonProperty("fechaReporte")
     private LocalDateTime fechaReporte;
-
-    @Column(name = "Estado", length = 20)
-    @JsonProperty("estado")
     private String estado;
 
-    // Getters y Setters
-
-    public Integer getReporteID() {
-        return reporteID;
-    }
-
-    public void setReporteID(Integer reporteID) {
-        this.reporteID = reporteID;
-    }
-
+    // Getters y setters
     public Integer getUsuarioID() {
         return usuarioID;
     }
