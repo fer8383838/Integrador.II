@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
     List<Reporte> findByUsuarioID(Integer usuarioID);
+    List<Reporte> findByZonaID(Integer zonaID);
+
+    @Override
+    List<Reporte> findAll();
 }

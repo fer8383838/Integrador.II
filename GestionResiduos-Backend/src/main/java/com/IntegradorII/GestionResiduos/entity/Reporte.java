@@ -1,5 +1,18 @@
-package com.IntegradorII.GestionResiduos.entity;
 
+
+/**
+ * Reporte.java (Entidad JPA)
+ *
+ * Esta clase representa la tabla "Reportes" en la base de datos.
+ * Se utiliza para guardar y recuperar información real sobre los reportes de residuos.
+ * La clase incluye anotaciones JPA para persistencia, y @JsonProperty para el intercambio con el frontend.
+ *
+ * DIFERENCIA CLAVE:
+ * Esta clase se usa directamente con la base de datos (mediante JPA).
+ * No se debe confundir con ReporteDTO, que solo se usa para recibir datos del formulario del frontend.
+ */
+
+package com.IntegradorII.GestionResiduos.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -19,10 +32,6 @@ public class Reporte {
     @Column(name = "UsuarioID", nullable = false)
     @JsonProperty("usuarioID")
     private Integer usuarioID;
-
-    @Column(name = "DireccionID", nullable = false)
-    @JsonProperty("direccionID")
-    private Integer direccionID;
 
     @Column(name = "TipoID", nullable = false)
     @JsonProperty("tipoID")
@@ -48,7 +57,8 @@ public class Reporte {
     @JsonProperty("estado")
     private String estado;
 
-    // Getters y Setters
+
+    // Métodos GET y SET estándar para JPA y JSON
 
     public Integer getReporteID() {
         return reporteID;
@@ -66,13 +76,6 @@ public class Reporte {
         this.usuarioID = usuarioID;
     }
 
-    public Integer getDireccionID() {
-        return direccionID;
-    }
-
-    public void setDireccionID(Integer direccionID) {
-        this.direccionID = direccionID;
-    }
 
     public Integer getTipoID() {
         return tipoID;
@@ -121,4 +124,5 @@ public class Reporte {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
 }

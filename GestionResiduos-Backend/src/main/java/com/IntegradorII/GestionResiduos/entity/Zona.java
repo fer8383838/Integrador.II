@@ -34,4 +34,45 @@ public class Zona {
     @Column(name = "Activa")
     @JsonProperty("activa")
     private Boolean activa;
+
+
+    public Integer getZonaID() {
+        return zonaID;
+    }
+
+    public void setZonaID(Integer zonaID) {
+        this.zonaID = zonaID;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getDistrito() {
+        return distrito;
+    }
+
+    public void setDistrito(String distrito) {
+        this.distrito = distrito;
+    }
+
+    public Boolean getActiva() {
+        return activa;
+    }
+
+    public void setActiva(Boolean activa) {
+        this.activa = activa;
+    }
 }

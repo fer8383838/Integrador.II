@@ -1,22 +1,17 @@
 package com.IntegradorII.GestionResiduos.dto;
 
-import com.IntegradorII.GestionResiduos.entity.Direccion;
-import java.util.List;
+import lombok.Data;
 
-public class UsuarioConDireccionesDTO {
+import java.time.LocalDateTime;
 
+@Data
+public class UsuarioParaTablaDTO {
     private Integer usuarioID;
     private String nombre;
     private String apellido;
     private String dni;
     private String email;
-    private String claveHash;
-    private String telefono;
-    private String rol;
-    private Boolean activo;
-    private List<Direccion> direcciones;
 
-    // Getters y Setters
     public Integer getUsuarioID() {
         return usuarioID;
     }
@@ -57,14 +52,6 @@ public class UsuarioConDireccionesDTO {
         this.email = email;
     }
 
-    public String getClaveHash() {
-        return claveHash;
-    }
-
-    public void setClaveHash(String claveHash) {
-        this.claveHash = claveHash;
-    }
-
     public String getTelefono() {
         return telefono;
     }
@@ -89,11 +76,25 @@ public class UsuarioConDireccionesDTO {
         this.activo = activo;
     }
 
-    public List<Direccion> getDirecciones() {
-        return direcciones;
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
     }
 
-    public void setDirecciones(List<Direccion> direcciones) {
-        this.direcciones = direcciones;
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
+
+    public String getNombreZona() {
+        return nombreZona;
+    }
+
+    public void setNombreZona(String nombreZona) {
+        this.nombreZona = nombreZona;
+    }
+
+    private String telefono;
+    private String rol;
+    private Boolean activo;
+    private LocalDateTime fechaRegistro;
+    private String nombreZona; // Este es el nuevo campo visible en la tabla
 }
