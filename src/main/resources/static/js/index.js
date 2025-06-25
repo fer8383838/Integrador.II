@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Paso 3: Validar el token haciendo un fetch al backend
-    fetch('http://localhost:8080/usuarios/info-rol-actual', {
+    fetch('https://integrador-ii.onrender.com/usuarios/info-rol-actual', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token

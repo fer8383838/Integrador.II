@@ -4,7 +4,7 @@
 
 
 // URL base de la API para las operaciones de usuarios
-const API_URL = 'http://localhost:8080/usuarios';
+const API_URL = 'https://integrador-ii.onrender.com/usuarios';
 
 // Agrega un listener al formulario de login, que se ejecutará cuando el usuario haga submit
 document.getElementById('formLogin').addEventListener('submit', async function (e) {

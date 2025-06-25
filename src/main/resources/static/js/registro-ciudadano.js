@@ -9,7 +9,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     // Paso 1: Cargar las zonas desde el backend al cargar la página
-    fetch('http://localhost:8080/zonas/listar')
+    fetch('https://integrador-ii.onrender.com/zonas/listar')
         .then(response => response.json())
         .then(data => {
             const zonaSelect = document.getElementById("zonaID");
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        fetch("http://localhost:8080/usuarios/registrar-ciudadano-publico", {
+        fetch("https://integrador-ii.onrender.com/usuarios/registrar-ciudadano-publico", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

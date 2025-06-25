@@ -10,10 +10,10 @@
 // ========================================================================================
 
 // Paso 1: Definición de constantes para los endpoints y Cloudinary
-const API_REPORTE = 'http://localhost:8080/reportes';
-const API_USUARIOS = 'http://localhost:8080/usuarios';
-//const API_TIPOS = 'http://localhost:8080/tipos-residuo';
-const API_ZONAS = 'http://localhost:8080/zonas';
+const API_REPORTE = 'https://integrador-ii.onrender.com/reportes';
+const API_USUARIOS = 'https://integrador-ii.onrender.com/usuarios';
+//const API_TIPOS = 'https://integrador-ii.onrender.com/tipos-residuo';
+const API_ZONAS = 'https://integrador-ii.onrender.com/zonas';
 
 const CLOUD_NAME = 'dqeip233e';
 const UPLOAD_PRESET = 'residuos_upload';

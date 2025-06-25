@@ -4,7 +4,7 @@
 
 
 
-const API_DIRECCION = 'http://localhost:8080/direcciones';
+const API_DIRECCION = 'https://integrador-ii.onrender.com/direcciones';
 
 // Registrar direccion
 document.getElementById('formDireccion').addEventListener('submit', async function (e) {
@@ -111,7 +111,7 @@ async function buscarDireccionesPorUsuarioID() {
 // Cargar usuarios al select del formulario
 async function cargarUsuariosParaFormulario() {
     try {
-        const res = await fetch('http://localhost:8080/usuarios/listar');
+        const res = await fetch('https://integrador-ii.onrender.com/usuarios/listar');
         const data = await res.json();
 
         const select = document.getElementById('usuarioID');

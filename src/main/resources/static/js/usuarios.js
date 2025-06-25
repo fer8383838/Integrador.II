@@ -10,9 +10,9 @@
 // ---------------------------------------------
 
 // URL base de los endpoints del backend para la entidad Usuario
-const API_URL = 'http://localhost:8080/usuarios';
+const API_URL = 'https://integrador-ii.onrender.com/usuarios';
 
-const ZONAS_API_URL = 'http://localhost:8080/zonas'
+const ZONAS_API_URL = 'https://integrador-ii.onrender.com/zonas'
 
 // Recupera el token JWT almacenado localmente al momento del login
 const token = localStorage.getItem('token');
