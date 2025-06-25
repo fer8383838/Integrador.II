@@ -3,7 +3,40 @@
 
 
 
+
 const API_URL = 'http://localhost:8080/usuarios';
+
+
+// Verificar si el usuario está logueado
+window.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const form = document.getElementById('registro-usuario');
+
+    if (!token) {
+        Swal.fire('Acceso denegado', 'Debe iniciar sesión primero', 'warning').then(() => {
+            window.location.href = 'login.html';
+        });
+        return;
+    }
+
+    // Ocultar formulario si ya está logueado
+    if (form) {
+        form.style.display = 'none';
+    }
+});
+
+
+
+
+
+// Ocultar formulario si el usuario ya está logueado
+window.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const form = document.getElementById('registro-usuario');
+    if (token) {
+        form.style.display = 'none';
+    }
+});
 
 // Registrar usuario con dirección
 document.getElementById('formUsuario').addEventListener('submit', async function (e) {
@@ -17,13 +50,11 @@ document.getElementById('formUsuario').addEventListener('submit', async function
         claveHash: document.getElementById('claveHash').value,
         telefono: document.getElementById('telefono').value,
         rol: document.getElementById('rol').value,
-        direcciones: [{
-            distrito: document.getElementById('distrito').value,
-            direccion: document.getElementById('direccion').value,
-            latitud: document.getElementById('latitud').value,
-            longitud: document.getElementById('longitud').value,
-            principal: true
-        }]
+        distrito: document.getElementById('distrito').value,
+        direccion: document.getElementById('direccion').value,
+        latitud: document.getElementById('latitud').value,
+        longitud: document.getElementById('longitud').value,
+        principal: true
     };
 
     try {
@@ -38,19 +69,43 @@ document.getElementById('formUsuario').addEventListener('submit', async function
             document.getElementById('formUsuario').reset();
             cargarUsuarios();
         } else {
-            Swal.fire('Error', 'No se pudo registrar', 'error');
+            const errorMsg = await res.text();
+            console.error('Error del servidor:', errorMsg);
+            Swal.fire('Error', errorMsg || 'No se pudo registrar', 'error');
         }
     } catch (err) {
         console.error('Error al registrar:', err);
+        Swal.fire('Error', 'Error de conexión o del servidor', 'error');
     }
 });
 
-// Listar todos
+// Listar todos (con token si está logueado)
 async function cargarUsuarios() {
     try {
-        const res = await fetch(`${API_URL}/listar`);
-        const data = await res.json();
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}/listar`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
 
+        if (!res.ok) {
+            const errorMsg = await res.text();
+            console.error('Error al listar usuarios:', errorMsg);
+            Swal.fire('Error', errorMsg || 'No se pudieron cargar los usuarios', 'error');
+            return;
+        }
+
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            console.error("Respuesta no es JSON");
+            Swal.fire('Error', 'Respuesta no válida del servidor', 'error');
+            return;
+        }
+
+        const data = await res.json();
         const tabla = document.getElementById('tablaUsuarios');
         tabla.innerHTML = '';
 
@@ -70,21 +125,37 @@ async function cargarUsuarios() {
         });
     } catch (err) {
         console.error('Error al cargar usuarios:', err);
+        Swal.fire('Error', 'Error al conectar con el servidor', 'error');
     }
 }
 
-// Buscar por ID
+// Buscar por ID (o por token si está logueado y no hay ID)
 async function buscarPorID() {
     const id = document.getElementById('buscarID').value;
-    if (!id) return cargarUsuarios();
+    const token = localStorage.getItem('token');
+    let res;
 
     try {
-        const res = await fetch(`${API_URL}/obtener-con-direcciones/${id}`);
-        if (!res.ok) throw new Error('Usuario no encontrado');
+        if (!id && token) {
+            res = await fetch(`${API_URL}/mi-perfil`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+        } else {
+            res = await fetch(`${API_URL}/obtener-principal/${id}`, {
+            headers: {'Authorization': `Bearer ${token}`}
+            }
+            );
+        }
+
+        if (!res.ok) {
+            const errorMsg = await res.text();
+            console.error('Error al buscar usuario:', errorMsg);
+            Swal.fire('Error', errorMsg || 'Usuario no encontrado', 'error');
+            return;
+        }
 
         const u = await res.json();
 
-        // Mostrar usuario
         const tabla = document.getElementById('tablaUsuarios');
         tabla.innerHTML = `
             <tr>
@@ -96,35 +167,26 @@ async function buscarPorID() {
                 <td>${u.telefono || '-'}</td>
                 <td>${u.rol}</td>
                 <td>${u.activo ? 'Sí' : 'No'}</td>
-                <td>${u.direcciones && u.direcciones.length > 0 ? u.direcciones[0].direccion : '-'}</td>
             </tr>
         `;
 
-        // Mostrar direcciones
         const tablaDir = document.getElementById('tablaDirecciones');
-        tablaDir.innerHTML = '';
-
-        if (u.direcciones && u.direcciones.length > 0) {
-            u.direcciones.forEach(d => {
-                const fila = document.createElement('tr');
-                fila.innerHTML = `
-                    <td>${d.distrito}</td>
-                    <td>${d.direccion}</td>
-                    <td>${d.latitud}</td>
-                    <td>${d.longitud}</td>
-                    <td>${d.principal ? 'Sí' : 'No'}</td>
-                `;
-                tablaDir.appendChild(fila);
-            });
-            document.getElementById('contenedorDirecciones').style.display = 'block';
-        } else {
-            document.getElementById('contenedorDirecciones').style.display = 'none';
-        }
+        tablaDir.innerHTML = `
+            <tr>
+                <td>${u.distrito}</td>
+                <td>${u.direccion}</td>
+                <td>${u.latitud}</td>
+                <td>${u.longitud}</td>
+                <td>${u.principal ? 'Sí' : 'No'}</td>
+            </tr>
+        `;
+        document.getElementById('contenedorDirecciones').style.display = 'block';
 
     } catch (err) {
-        Swal.fire('Error', err.message, 'error');
+        console.error('Error en la búsqueda:', err);
+        Swal.fire('Error', err.message || 'No se pudo buscar el usuario', 'error');
     }
 }
 
-// Inicial
 cargarUsuarios();
+

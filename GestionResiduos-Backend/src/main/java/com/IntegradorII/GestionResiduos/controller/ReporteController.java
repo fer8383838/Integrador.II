@@ -67,12 +67,6 @@ public class ReporteController {
     @Autowired
     private SesionService sesionService;
 
-    @Autowired
-    private TipoResiduoRepository tipoResiduoRepository;
-
-    @Autowired
-    private ReporteRepository reporteRepository;
-
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -85,6 +79,14 @@ public class ReporteController {
     private DireccionRepository direccionRepository;
     @Autowired
     private ZonaRepository zonaRepository;
+    @Autowired
+    private TipoResiduoRepository tipoResiduoRepository;
+
+    @Autowired
+    private ReporteRepository reporteRepository;
+
+    @Autowired
+    private UsuarioController usuarioController;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -93,106 +95,99 @@ public class ReporteController {
     @Autowired
     private UbicacionGPSRepository ubicacionGPSRepository;
 
-
-
-
     @Autowired
     private AtencionIncidenciaRepository atencionIncidenciaRepository;
+
 
 
 
     @GetMapping("/listar")
     public ResponseEntity<?> listarReportes(HttpServletRequest request) {
         try {
-            // Paso 1: Validamos el token e invocamos el endpoint /usuarios/info-rol-actual
+            // Paso 1: Validamos el token llamando al endpoint /usuarios/info-rol-actual
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", request.getHeader("Authorization")); // pasamos el token
+            headers.set("Authorization", request.getHeader("Authorization")); // Se pasa el token al header
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             ResponseEntity<Map> respuesta = restTemplate.exchange(
-                    "http://localhost:8080/usuarios/info-rol-actual", // endpoint ya creado en UsuarioController
+                    "http://localhost:8080/usuarios/info-rol-actual",
                     HttpMethod.GET,
                     entity,
                     Map.class
             );
 
-            // Paso 2: Si el token no es válido, se corta el flujo
             if (!respuesta.getStatusCode().is2xxSuccessful()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido o expirado.");
             }
 
-            // Paso 3: Obtenemos el rol y el usuarioID del token
+            // Paso 2: Extraemos los datos del token
             Map<String, Object> datos = respuesta.getBody();
             String rol = (String) datos.get("rol");
             Integer usuarioID = (Integer) datos.get("usuarioID");
 
-            // Paso 4: Obtenemos todos los reportes
+            // Paso 3: Obtenemos todos los reportes
             List<Reporte> reportes = reporteRepository.findAll();
             List<ReporteParaTablaDTO> listaDTO = new ArrayList<>();
 
+            // Paso 4: Iteramos sobre los reportes para aplicar filtros por rol y mapear el DTO
             for (Reporte reporte : reportes) {
 
-                // Filtro por rol:
+                // Filtro para Ciudadano: solo ve sus propios reportes
                 if (rol.equals("Ciudadano") && !reporte.getUsuarioID().equals(usuarioID)) {
-                    continue; // salta si el ciudadano no es el dueño del reporte
+                    continue;
                 }
 
-                // (Aquí luego agregarás los filtros para Supervisor y Operario)
-                // Filtro específico para Supervisor
+                // Filtro para Supervisor: solo ve reportes de su zona
                 if (rol.equals("Supervisor")) {
                     Usuario supervisor = usuarioRepository.findById(usuarioID).orElse(null);
                     if (supervisor == null || supervisor.getZonaID() == null) {
-                        continue; // Si no tiene zona asignada, no puede ver reportes
+                        continue;
                     }
-                    // Si el reporte no pertenece a su zona, lo ignoramos
                     if (!reporte.getZonaID().equals(supervisor.getZonaID())) {
                         continue;
                     }
                 }
 
+                // Filtro para Operario: solo ve reportes asignados a él (AtencionIncidencias)
+                if (rol.equals("Operario")) {
+                    boolean asignado = atencionIncidenciaRepository.existsByReporteIDAndOperarioID(reporte.getReporteID(), usuarioID);
+                    if (!asignado) {
+                        continue;
+                    }
+                }
 
-
-
-                // Creamos DTO base
+                // Paso 5: Creamos el DTO con los datos del reporte
                 ReporteParaTablaDTO dto = new ReporteParaTablaDTO();
                 dto.setReporteID(reporte.getReporteID());
                 dto.setDescripcion(reporte.getDescripcion());
-                dto.setFechaReporte(reporte.getFechaReporte());
                 dto.setEstado(reporte.getEstado());
+                dto.setFechaReporte(reporte.getFechaReporte());
                 dto.setFotoURL(reporte.getFotoURL());
 
-                // Usuario
-                Usuario usuario = usuarioRepository.findById(reporte.getUsuarioID()).orElse(null);
-                if (usuario != null) {
-                    dto.setNombreUsuario(usuario.getNombre() + " " + usuario.getApellido());
-                }
-
-                // Tipo de residuo
-                TipoResiduo tipo = tipoResiduoRepository.findById(reporte.getTipoID()).orElse(null);
-                if (tipo != null) {
-                    dto.setTipoResiduo(tipo.getNombre());
-                }
-
-                // Zona
-                Zona zona = zonaRepository.findById(reporte.getZonaID()).orElse(null);
-                if (zona != null) {
-                    dto.setZona(zona.getNombre());
-                }
-
-                // Latitud y longitud desde la tabla UbicacionGPS
+                // Paso 6: Agregamos las coordenadas desde la tabla UbicacionGPS
                 UbicacionGPS ubicacion = ubicacionGPSRepository.findByReporteID(reporte.getReporteID());
                 if (ubicacion != null) {
                     dto.setLatitud(ubicacion.getLatitud());
                     dto.setLongitud(ubicacion.getLongitud());
                 }
 
+                // Paso 7: Datos relacionados por ID (usuario, tipo, zona)
+                Usuario usuario = usuarioRepository.findById(reporte.getUsuarioID()).orElse(null);
+                TipoResiduo tipo = tipoResiduoRepository.findById(reporte.getTipoID()).orElse(null);
+                Zona zona = zonaRepository.findById(reporte.getZonaID()).orElse(null);
+
+                dto.setNombreUsuario(usuario != null ? usuario.getNombre() + " " + usuario.getApellido() : "Desconocido");
+                dto.setDireccion("No registrada"); // Ya no se usa DireccionID
+                dto.setTipoResiduo(tipo != null ? tipo.getNombre() : "N/D");
+                dto.setZona(zona != null ? zona.getNombre() : "N/D");
+
+                // Paso 8: Agregamos el DTO a la lista final
                 listaDTO.add(dto);
             }
 
-            System.out.println("Hola maldito.    Papa esta n casa bebeeeeee");
-
+            // Paso 9: Devolvemos la lista completa
             return ResponseEntity.ok(listaDTO);
 
         } catch (Exception e) {
@@ -200,10 +195,10 @@ public class ReporteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al listar reportes: " + e.getMessage());
         }
-
-
-
     }
+
+
+
 
 
 

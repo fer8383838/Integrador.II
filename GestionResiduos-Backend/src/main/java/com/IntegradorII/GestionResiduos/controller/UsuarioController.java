@@ -445,6 +445,8 @@ public class UsuarioController {
 
             String rol = usuario.getRol();
 
+
+
             // Configurar qué partes del frontend deben mostrarse según el rol
             boolean mostrarFormulario = rol.equals("Administrador");
             boolean mostrarBuscar = rol.equals("Administrador");
@@ -464,6 +466,18 @@ public class UsuarioController {
             datos.put("mostrarBuscarPorID", mostrarBuscar);
             datos.put("mostrarBotonVerTodos", mostrarBotonVerTodos);
             datos.put("mostrarTablaUsuarios", mostrarTabla);
+
+
+
+            datos.put("zonaID", usuario.getZonaID());
+            Zona zona = zonaRepository.findById(usuario.getZonaID()).orElse(null);
+
+
+            if (zona != null) {
+                datos.put("nombreZona", zona.getNombre());
+
+            }
+
 
             return ResponseEntity.ok(datos);
         } catch (Exception e) {
@@ -541,6 +555,42 @@ public class UsuarioController {
         return ResponseEntity.ok("Ciudadano registrado correctamente.");
     }
 
+
+
+
+    //  ---   Asignacion de reportes a operarios   ------------------------------------------------
+    @GetMapping("/operarios-por-zona/{zonaId}")
+    public ResponseEntity<?> operariosPorZona(@PathVariable Integer zonaId,
+                                              HttpServletRequest request) {
+
+        // 1. validar token (sólo SUPERVISOR o ADMIN)
+        ResponseEntity<?> check = sesionService.verificarToken(request);
+        if (check != null) return check;
+
+        String email = jwtUtil.obtenerUsername(request.getHeader("Authorization").substring(7));
+        Usuario auth = usuarioRepository.findByEmail(email);
+        if (auth == null) return ResponseEntity.status(404).body("Usuario no encontrado");
+
+        if (!auth.getRol().equals("Administrador") && !auth.getRol().equals("Supervisor"))
+            return ResponseEntity.status(403).body("Sin permiso");
+
+        // 2. si es supervisor, sólo su propia zona
+        if (auth.getRol().equals("Supervisor") && !zonaId.equals(auth.getZonaID()))
+            return ResponseEntity.status(403).body("Zona no autorizada");
+
+        // 3. devolver lista simple de operarios
+        List<Map<String,Object>> lista = usuarioRepository
+                .findByRolAndZonaID("Operario", zonaId)
+                .stream()
+                .map(op -> {
+                    Map<String,Object> m = new HashMap<>();
+                    m.put("operarioID", op.getUsuarioID());
+                    m.put("nombre", op.getNombre() + " " + op.getApellido());
+                    return m;
+                }).toList();
+
+        return ResponseEntity.ok(lista);
+    }
 
 
 

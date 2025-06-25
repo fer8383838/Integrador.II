@@ -59,7 +59,8 @@ public class SecurityConfig {
                                 "/usuarios/login",      // Login backend
                                 "/usuarios/registrar-completo", // Registro desde frontend por administrador
                                 "/usuarios/registrar-ciudadano-publico",
-                                "/registro-ciudadano.html"
+                                "/registro-ciudadano.html",
+                                "/usuarios/info-rol-actual"
                         ).permitAll() // Estas rutas no requieren autenticación
                         .anyRequest().authenticated()  // Tod.o lo demás requiere JWT
                 )

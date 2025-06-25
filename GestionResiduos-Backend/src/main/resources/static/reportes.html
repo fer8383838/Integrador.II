@@ -7,7 +7,8 @@
      DESCRIPCIÓN: Página para registrar y visualizar reportes de residuos.
      Estructura basada en usuarios.html. Compatible con Leaflet, Cloudinary y JWT.
 ========================================================================================= -->
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Reportes</title>
@@ -39,7 +40,7 @@
             <select id="usuarioID" class="form-select" disabled></select>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6" style="display: none">
             <label for="tipoID" class="form-label">Tipo de Residuo</label>
             <select id="tipoID" class="form-select" required></select>
         </div>
@@ -80,11 +81,33 @@
         <table class="table table-bordered text-center align-middle">
             <thead class="table-success">
             <tr>
-                <th>ID</th><th>Usuario</th><th>Tipo</th><th>Zona</th>
+                <th>ID</th><th>Usuario</th><!--<th>Tipo</th>--><th>Zona</th>
                 <th>Descripcion</th> <th>Foto</th><th>Fecha</th><th>Estado</th> <th>Ubicacion</th>
+                <th class="columna-asignar">Asignar</th>
             </tr>
             </thead>
             <tbody id="tablaReportes"></tbody>
+        </table>
+
+
+
+        <h4 class="mt-4">Reportes Atendidos</h4>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Zona</th>
+                <th>Descripción</th>
+                <th>Foto</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Ubicación</th>
+                <th class="th-asignar">Asignación</th>
+                <th class="th-finalizar">Atención</th>
+            </tr>
+            </thead>
+            <tbody id="tablaReportesAtendidos"></tbody>
         </table>
     </div>
 
@@ -97,6 +120,28 @@
             </div>
             <div class="modal-body">
                 <div id="mapaLeaflet" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal para asignar operario -->
+<div class="modal fade" id="modalAsignar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Asignar operario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <select id="selOperario" class="form-select">
+                    <!-- Se llenará desde JS -->
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="btnConfirmarAsignacion" class="btn btn-success">Confirmar</button>
             </div>
         </div>
     </div>
@@ -115,5 +160,6 @@
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 
-<script src="js/reportes.js"></script></body>
+<script src="js/reportes.js"></script>
+</body>
 </html>

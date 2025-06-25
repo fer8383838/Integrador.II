@@ -22,15 +22,27 @@
 </nav>
 
 <main class="container mt-4">
-    <div class="form-container">
+    <div id="registro-usuario" class="form-container">
         <h2 class="text-center mb-4"><i class="bi bi-person-plus-fill"></i> Registrar Usuario</h2>
         <form id="formUsuario" class="row g-3">
-            <div class="col-md-6"><input type="text" class="form-control" id="nombre" placeholder="Nombre" required></div>
-            <div class="col-md-6"><input type="text" class="form-control" id="apellido" placeholder="Apellido" required></div>
-            <div class="col-md-6"><input type="text" class="form-control" id="dni" placeholder="DNI" required></div>
-            <div class="col-md-6"><input type="email" class="form-control" id="email" placeholder="Email" required></div>
-            <div class="col-md-6"><input type="password" class="form-control" id="claveHash" placeholder="Contraseña" required></div>
-            <div class="col-md-6"><input type="text" class="form-control" id="telefono" placeholder="Teléfono"></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre" minlength="2" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="apellido" placeholder="Apellido" minlength="2" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="dni" placeholder="DNI" pattern="[0-9]{8}" title="Debe tener exactamente 8 dígitos" required>
+            </div>
+            <div class="col-md-6">
+                <input type="email" class="form-control" id="email" placeholder="Email" required>
+            </div>
+            <div class="col-md-6">
+                <input type="password" class="form-control" id="claveHash" placeholder="Contraseña" required>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="telefono" placeholder="Teléfono" pattern="9[0-9]{8}" title="Debe empezar con 9 y tener 9 dígitos" required>
+            </div>
             <div class="col-md-6">
                 <select class="form-select" id="rol" required>
                     <option value="" disabled selected>Rol</option>
@@ -40,11 +52,18 @@
                     <option value="Administrador">Administrador</option>
                 </select>
             </div>
-            <div class="col-md-6"><input type="text" class="form-control" id="distrito" placeholder="Distrito" required></div>
-            <div class="col-md-6"><input type="text" class="form-control" id="direccion" placeholder="Dirección" required></div>
-            <div class="col-md-6"><input type="number" class="form-control" id="latitud" placeholder="Latitud" required></div>
-            <div class="col-md-6"><input type="number" class="form-control" id="longitud" placeholder="Longitud" required></div>
-
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="distrito" placeholder="Distrito" required>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="direccion" placeholder="Dirección" required>
+            </div>
+            <div class="col-md-6">
+                <input type="number" step="0.000001" min="-90" max="90" class="form-control" id="latitud" placeholder="Latitud" required>
+            </div>
+            <div class="col-md-6">
+                <input type="number" step="0.000001" min="-180" max="180" class="form-control" id="longitud" placeholder="Longitud" required>
+            </div>
             <div class="col-12 text-center">
                 <button type="submit" class="btn btn-success">Registrar Usuario</button>
             </div>
