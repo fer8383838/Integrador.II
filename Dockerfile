@@ -5,7 +5,7 @@ FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
 # Copia el archivo .jar de tu aplicación al contenedor
-COPY target/GestionResiduos-0.0.1-SNAPSHOT.jar app.jar
+COPY GestionResiduos-0.0.1-SNAPSHOT.jar app.jar
 
 # Expón el puerto 8080 para que Render lo detecte
 EXPOSE 8080
