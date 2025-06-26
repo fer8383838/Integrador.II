@@ -593,10 +593,5 @@ public class UsuarioController {
     }
 
 
-    @GetMapping("/encriptar/{texto}")
-    public String encriptarTexto(@PathVariable String texto) {
-        return passwordEncoder.encode(texto);
-    }
-
 
 }
