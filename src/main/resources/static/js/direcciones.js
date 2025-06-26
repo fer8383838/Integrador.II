@@ -188,7 +188,7 @@ document.getElementById('usuarioID').addEventListener('change', async function (
     }
 });
 
-// Inicializar todo
+// Inicializar
 cargarDirecciones();
 cargarUsuariosParaFormulario();
 
