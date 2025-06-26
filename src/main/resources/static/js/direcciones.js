@@ -6,7 +6,10 @@
 
 const API_DIRECCION = 'https://integrador-ii.onrender.com/direcciones';
 
-// Registrar direccion
+// Paso 1: Obtener el token almacenado tras el login
+const token = localStorage.getItem("token");
+
+// Paso 2: Registrar direccion
 document.getElementById('formDireccion').addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -22,7 +25,10 @@ document.getElementById('formDireccion').addEventListener('submit', async functi
     try {
         const respuesta = await fetch(`${API_DIRECCION}/registrar`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
             body: JSON.stringify(nuevaDireccion)
         });
 
@@ -41,10 +47,15 @@ document.getElementById('formDireccion').addEventListener('submit', async functi
     }
 });
 
-// Cargar direcciones
+// Paso 3: Cargar direcciones con token
 async function cargarDirecciones() {
     try {
-        const respuesta = await fetch(`${API_DIRECCION}/listar`);
+        const respuesta = await fetch(`${API_DIRECCION}/listar`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
 
         if (!respuesta.ok) {
             const errorMsg = await respuesta.text();
@@ -77,13 +88,17 @@ async function cargarDirecciones() {
     }
 }
 
-// Buscar direcciones por usuarioID
+// Paso 4: Buscar direcciones por usuarioID
 async function buscarDireccionesPorUsuarioID() {
     const usuarioID = document.getElementById('buscarUsuarioID').value;
     if (!usuarioID) return cargarDirecciones();
 
     try {
-        const res = await fetch(`${API_DIRECCION}/listar/${usuarioID}`);
+        const res = await fetch(`${API_DIRECCION}/listar/${usuarioID}`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
         const direcciones = await res.json();
 
         const tabla = document.getElementById('tablaDirecciones');
@@ -108,10 +123,15 @@ async function buscarDireccionesPorUsuarioID() {
     }
 }
 
-// Cargar usuarios al select del formulario
+// Paso 5: Cargar usuarios para el formulario (requiere token también)
 async function cargarUsuariosParaFormulario() {
     try {
-        const res = await fetch('https://integrador-ii.onrender.com/usuarios/listar');
+        const res = await fetch('https://integrador-ii.onrender.com/usuarios/listar', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+
         const data = await res.json();
 
         const select = document.getElementById('usuarioID');
@@ -129,7 +149,7 @@ async function cargarUsuariosParaFormulario() {
     }
 }
 
-// Mostrar direcciones de usuario seleccionado
+// Paso 6: Mostrar direcciones al cambiar usuario
 document.getElementById('usuarioID').addEventListener('change', async function () {
     const usuarioID = this.value;
     const selectDirecciones = document.getElementById('direccionesRegistradas');
@@ -142,7 +162,11 @@ document.getElementById('usuarioID').addEventListener('change', async function (
     }
 
     try {
-        const res = await fetch(`${API_DIRECCION}/listar/${usuarioID}`);
+        const res = await fetch(`${API_DIRECCION}/listar/${usuarioID}`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
         const direcciones = await res.json();
 
         if (direcciones.length === 0) {
@@ -167,3 +191,4 @@ document.getElementById('usuarioID').addEventListener('change', async function (
 // Inicializar todo
 cargarDirecciones();
 cargarUsuariosParaFormulario();
+
