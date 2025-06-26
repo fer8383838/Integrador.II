@@ -217,6 +217,12 @@ document.addEventListener("DOMContentLoaded", function () {
     formReporte.addEventListener("submit", async function (e) {
         e.preventDefault();
 
+        // Paso 1: Desactivar el botón para evitar doble envío
+            const boton = document.getElementById('btnRegistrar');
+            boton.disabled = true;
+            boton.textContent = "Registrando...";
+
+
         const usuarioID = document.getElementById("usuarioID").value;
         //const tipoID = document.getElementById("tipoID").value;
         const zonaID = document.getElementById("zonaID").value;
@@ -264,6 +270,11 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
             console.error("Error al registrar reporte:", error);
             Swal.fire("Error inesperado", "Ocurrió un problema al registrar el reporte.", "error");
+        }finally{
+             // Paso 2: Rehabilitar el botón (si deseas)
+                    boton.disabled = false;
+                    boton.textContent = "Registrar";
+
         }
     });
 });
