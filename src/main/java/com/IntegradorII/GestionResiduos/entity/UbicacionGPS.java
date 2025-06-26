@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "UbicacionesGPS")
-
 public class UbicacionGPS {
 
+    // Paso 1: Mapeamos correctamente el nombre de la columna primaria
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "UbicacionID") // 🔧 aquí estaba el error
     private Integer id;
 
     @Column(name = "reporteID")
