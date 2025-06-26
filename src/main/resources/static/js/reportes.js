@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const usuarioID = document.getElementById("usuarioID").value;
-        //const tipoID = document.getElementById("tipoID").value;
+        const tipoID = document.getElementById("tipoID").value;
         const zonaID = document.getElementById("zonaID").value;
         const descripcion = document.getElementById("descripcion").value.trim();
         const fotoURL = document.getElementById("fotoURL").value;
@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const nuevoReporte = {
             usuarioID: parseInt(usuarioID),
-            //tipoID: parseInt(tipoID),
+            tipoID: parseInt(tipoID),
             zonaID: parseInt(zonaID),
             descripcion: descripcion,
             fotoURL: fotoURL,
