@@ -117,7 +117,7 @@ document.getElementById('formUsuario')?.addEventListener('submit', async (e) => 
         claveHash: document.getElementById('claveHash').value,
         telefono: document.getElementById('telefono').value,
         rol: document.getElementById('rol').value,
-        zonaID: document.getElementById('zonaID').value,
+        //zonaID: document.getElementById('zonaID').value,
         distrito: document.getElementById('distrito').value,
         direccion: document.getElementById('direccion').value,
         latitud: document.getElementById('latitud').value,
